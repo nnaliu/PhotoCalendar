@@ -14,10 +14,19 @@ if (Meteor.isClient) {
       Session.set('counter', Session.get('counter') + 1);
     }
   });
+
+  Meteor.publish('calendar', function () {
+    return Calendar.find();
+  });
 }
 
 if (Meteor.isServer) {
   Meteor.startup(function () {
     // code to run on server at startup
   });
+  
+  Meteor.subscribe('calendar', function () {
+    Session.set('superCalendarReady', true);
+  });
+
 }
