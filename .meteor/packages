@@ -6,4 +6,6 @@
 
 meteor-platform
 insecure
-gabrielhpugliese:supercalendar
+fullcalendar
+jquery
+bootstrap
