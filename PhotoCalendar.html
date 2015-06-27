@@ -1,7 +1,65 @@
 <head>
   <title>PhotoCalendar</title>
+
+	<script src="//cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js"></script>
 </head>
 
 <body>
-  {{> calendar}}
+	<button type="button" id="signin-button">Authorize</button>
+
+	<script>
+	var client = new Dropbox.Client({ key: "r8vasksel4u567m" });
+
+		// Try to use cached credentials.
+	client.authenticate({interactive: false}, function(error, client) {
+	  if (error) {
+	    return handleError(error);
+	  }
+
+
+	  if (client.isAuthenticated()) {
+	    // Cached credentials are available, make Dropbox API calls.
+
+	    	client.readdir("/", function(error, name, stat, metadata) {
+			  if (error) {
+			    // return showError(error);  // Something went wrong.
+			  }
+			  var arrayOfArrays = [];
+			  
+			  for (i in metadata) {
+			  	if (metadata[i].mimeType == "image/png") {
+
+			  		var img = []
+			  		img.push(metadata[i].modifiedAt)
+			  		var url = client.thumbnailUrl(metadata[i].path, {size : "xl"});
+			  		img.push(url)
+			  		// console.log(img);	
+			  		// console.log(name[i]);
+			  		// console.log(metadata[i].modifiedAt);
+			  	}
+			  	arrayOfArrays.push(img);
+			  }
+			  console.log(arrayOfArrays);
+			});
+
+
+	  } else {
+	    // show and set up the "Sign into Dropbox" button
+	    var button = document.getElementById("signin-button");
+	    button.setAttribute("class", "visible");
+	    button.addEventListener("click", function() {
+	      // The user will have to click an 'Authorize' button.
+	      client.authenticate(function(error, client) {
+	        if (error) {
+	          return handleError(error);
+	        }
+	        console.log("hello.contents")
+	      });
+	    });
+	  }
+
+	});
+
+	</script> 
+
 </body>
